@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flight Weather Briefing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:#fff;color:#1f2328}
+button,input{font:inherit;color:inherit}button{cursor:pointer}a{color:#2563eb}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 20px 56px;display:flex;flex-direction:column;gap:24px}
+.mono{font-family:'JetBrains Mono',monospace}.muted{color:#6b7280}
+h1{margin:4px 0 0;font-size:30px;font-weight:600;letter-spacing:-.02em}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.eyebrow{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#6b7280}
+.card{border:1px solid #e3e6ea;border-radius:16px;overflow:hidden}.pad{padding:24px}
+.btn{height:44px;padding:0 18px;border:1px solid #e3e6ea;background:#fff;border-radius:10px}
+.btn.pri{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:500}
+.chipbtn{height:36px;padding:0 14px;border:1px solid #e3e6ea;background:#f7f8fa;border-radius:999px;font-size:13px}
+.row{display:flex;flex-wrap:wrap;gap:12px}.ctl{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#4b5563}
+.ctl input{height:46px;border:1px solid #d5d9df;border-radius:10px;padding:0 12px;background:#fff}
+.ic{flex:1 1 150px}.ic input{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.08em;text-transform:uppercase;width:100%}
+:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.seg{display:inline-flex;border:1px solid #d5d9df;border-radius:10px;padding:3px;gap:3px;background:#fff}
+.seg button{height:34px;min-width:44px;padding:0 14px;border:0;border-radius:8px;background:transparent;color:#6b7280}
+.seg button.on{box-shadow:0 0 0 1px #d5d9df;color:#1f2328;font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:20px;font-size:13px;color:#4b5563;align-items:center}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;background:#fef3c7;border:1px solid #f0c36d;margin-right:6px}
+.bh{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #eef0f3}
+.role{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#6b7280}
+.title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.title b{font-size:24px;font-weight:500}
+.flag{font-size:12px;padding:3px 10px;border-radius:999px;background:#fef3c7;color:#92400e}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top}
+th{font-weight:400;font-size:12px;color:#6b7280;border-bottom-color:#eef0f3}th .t{font-size:15px;color:#1f2328;margin-top:2px}
+th.e .t{color:#2563eb;font-weight:600}td.l{font-size:13px;color:#4b5563;width:150px}
+td{font-size:14px;font-variant-numeric:tabular-nums}.m{color:#7c8794;font-style:italic}
+.w{background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:6px}.note{font-size:12px;color:#6b7280;margin-top:4px}
+.bf{padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px;background:#fafbfc;border-top:1px solid #eef0f3}
+.lab{font-size:12px;font-weight:600;letter-spacing:.05em;color:#6b7280;margin-bottom:6px}
+pre{margin:0;background:#fff;border:1px solid #e3e6ea;border-radius:10px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg{padding:24px;color:#4b5563}.foot{font-size:13px;line-height:1.6;color:#6b7280;border-top:1px solid #eef0f3;padding-top:20px}
+@media print{.noprint{display:none!important}.wrap{padding:0}.card{break-inside:avoid;margin-bottom:12px}th{background:#fff9a6}td.l{background:#fff9a6}}
+</style></head><body><div class="wrap">
+<div class="top"><div><div class="eyebrow">Flight planning · Weather</div><h1>Flight Weather Briefing</h1></div>
+<div class="row noprint"><button class="btn" onclick="print()">Print form</button><button class="btn pri" id="go">Get briefing</button></div></div>
+<div class="card pad noprint" style="display:flex;flex-direction:column;gap:20px">
+<div class="row" id="icaos"></div><datalist id="et"><option value="HAAB">Addis Ababa Bole</option><option value="HAAM">Arba Minch</option><option value="HAAX">Axum</option><option value="HABC">Jinka</option><option value="HABD">Bahir Dar</option><option value="HADC">Dessie (Combolcha)</option><option value="HADD">Dembi Dolo</option><option value="HADM">Debre Markos</option><option value="HADR">Dire Dawa</option><option value="HAGB">Goba (Robe)</option><option value="HAGM">Gambela</option><option value="HAGN">Gondar</option><option value="HAGO">Gode</option><option value="HAHU">Humera</option><option value="HAJJ">Jijiga</option><option value="HAJM">Jimma</option><option value="HAKD">Kabri Dar</option><option value="HALA">Hawassa</option><option value="HALL">Lalibela</option><option value="HAMK">Mekele</option><option value="HANG">Negele Borena</option><option value="HANK">Nekemte</option><option value="HASM">Semera</option><option value="HASO">Asosa</option><option value="HASR">Shire</option><option value="HAYB">Yabelo</option><option value="HAMT">Mizan Tefere</option><option value="HAGR">Gore</option><option value="HABE">Begi</option><option value="HAMM">Metema</option><option value="HAMA">Mekane Selam</option></datalist>
+<div class="row" style="align-items:flex-end;gap:20px">
+<label class="ctl">ETD<input type="datetime-local" id="etd"></label>
+<label class="ctl">ETA<input type="datetime-local" id="eta"></label>
+<div class="seg" id="zone"><button data-z="UTC">UTC</button><button data-z="Local">Local</button></div></div>
+<div id="err" style="color:#b42318;font-size:14px" role="alert"></div></div>
+<div class="legend"><span><b>●</b> Official METAR / TAF (NOAA Aviation Weather Center)</span><span class="m">◌ Model forecast (Open-Meteo), not official</span><span><i class="sw"></i>Below common limits</span><span class="muted" id="upd" style="margin-left:auto"></span></div>
+<div id="blocks" style="display:flex;flex-direction:column;gap:24px"></div>
+<details class="foot noprint" style="border-top:0;padding-top:0"><summary style="cursor:pointer;color:#1f2328;font-weight:500">How reliable is this data?</summary><p><b>Official:</b> METAR and TAF come from the NOAA Aviation Weather Center and are shown exactly as issued (raw text included). Many regional airports, including some in Ethiopia such as HAAM, publish no METAR or TAF. For those, this app never borrows another airport's report.</p><p><b>Model (◌, grey italic):</b> Open-Meteo is a computer forecast on a grid several kilometres wide. It is not an observation, can differ from real conditions, and has no cloud ceiling. It is shown only when no official value exists for that time, and always labelled.</p><p><b>Nothing is invented:</b> if a value is unavailable it says N/A. Always verify with your official AIS/MET service before flight.</p></details><div class="foot">Sources: NOAA Aviation Weather Center (METAR, TAF) · Open-Meteo (model values where a TAF has none). For training and situational awareness only. Not an official briefing. Always verify with your official AIS/MET service before flight.</div>
+</div>
+<script>
+const DEFS=[['dep','Departure','Departure Aerodrome','ETD',1,1],['toa','Take-off Alternate','Take-off Alternate Aerodrome','ETD',1,0],['enr','Enroute Alternate','Enroute Alternate Aerodrome','ETA',1,0],['dal','Destination Alternate','Destination Alternate Aerodrome','ETA',1,0],['dst','Destination','Destination Aerodrome','ETA',2,1]];
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={zone:'UTC',win:{},ic:{},data:{},runs:{}},saved={};
+try{saved=JSON.parse(localStorage.getItem('fwb')||'{}')}catch(e){}
+S.zone=saved.zone||'UTC';S.win=saved.win||{};DEFS.forEach(d=>{if(!S.win[d[0]])S.win[d[0]]=d[4]});
+const save=()=>{try{localStorage.setItem('fwb',JSON.stringify({zone:S.zone,win:S.win,ic:S.ic}))}catch(e){}};
+const toInput=ms=>{const d=new Date(ms);return S.zone==='UTC'?d.toISOString().slice(0,16):`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const fromInput=v=>S.zone==='UTC'?Date.parse(v+':00Z'):Date.parse(v);
+const hhmm=ms=>{const d=new Date(ms);return S.zone==='UTC'?pad(d.getUTCHours())+pad(d.getUTCMinutes())+'Z':pad(d.getHours())+pad(d.getMinutes())+' LT'};
+let etd=Math.ceil((Date.now()+2*36e5)/9e5)*9e5,eta=etd+3*36e5;
+// ---- inputs
+$('#icaos').innerHTML=DEFS.map(d=>`<label class="ctl ic">${d[1]}${d[5]?'':' (optional)'}<input id="ic-${d[0]}" maxlength="4" placeholder="ICAO" list="et" autocomplete="off" value="${esc((saved.ic||{})[d[0]]||'')}"></label>`).join('');
+const setZone=()=>{document.querySelectorAll('#zone button').forEach(b=>b.classList.toggle('on',b.dataset.z===S.zone));$('#etd').value=toInput(etd);$('#eta').value=toInput(eta)};
+$('#zone').onclick=e=>{const z=e.target.dataset.z;if(!z)return;etd=fromInput($('#etd').value)||etd;eta=fromInput($('#eta').value)||eta;S.zone=z;setZone();save();renderAll()};
+setZone();
+// ---- weather helpers
+const WX={RA:'rain',DZ:'drizzle',SN:'snow',SG:'snow grains',PL:'ice pellets',GR:'hail',GS:'small hail',UP:'unknown precipitation',SH:'showers',TS:'thunderstorm',FZ:'freezing',BL:'blowing',DR:'drifting',MI:'shallow',BC:'patches of',PR:'partial',FG:'fog',BR:'mist',HZ:'haze',FU:'smoke',DU:'dust',SA:'sand',VA:'volcanic ash',SQ:'squalls',FC:'funnel cloud',DS:'duststorm',SS:'sandstorm',PO:'dust whirls',VC:'in the vicinity'};
+const wxTxt=s=>{const o=(s||'').split(/\s+/).filter(t=>t&&t!=='NSW').map(t=>{let p='';if(t[0]=='-'){p='light ';t=t.slice(1)}else if(t[0]=='+'){p='heavy ';t=t.slice(1)}return p+(t.match(/.{1,2}/g)||[]).map(c=>WX[c]||c).join(' ')+' ('+t+')'});return o.length?o.join(', '):'None reported'};
+const ceilFt=c=>{const b=(c||[]).filter(x=>['BKN','OVC','OVX'].includes(x.cover)&&x.base!=null).map(x=>x.base);return b.length?Math.min(...b):null};
+const cloudTxt=c=>c&&c.length?c.map(x=>x.base!=null?x.cover+String(Math.round(x.base/100)).padStart(3,'0'):x.cover).join(' '):'—';
+const windTxt=o=>o.wspd==null?'—':(o.wspd===0?'Calm':(o.wdir==='VRB'?'VRB':pad(o.wdir||0).padStart(3,'0')+'°')+' / '+o.wspd+' kt'+(o.wgst?' G'+o.wgst:''));
+const visTxt=o=>{if(o.visib==null)return'—';const n=parseFloat(o.visib);return o.visib+' SM · '+(n*1.609).toFixed(n>=10?0:1)+(String(o.visib).endsWith('+')?'+':'')+' km'};
+const rh=(t,d)=>Math.round(100*Math.exp(17.625*d/(243.04+d))/Math.exp(17.625*t/(243.04+t)));
+const hpa=a=>a==null?null:(a>200?a:a*33.8639);
+const FIELDS=['wdir','wspd','wgst','visib','clouds','wxString'];
+function tafAt(taf,T){const s=T/1000,f=taf.fcsts||[];if(!f.length||s<taf.validTimeFrom||s>=taf.validTimeTo)return null;
+ const base=f.filter(x=>(!x.changeIndicator||x.changeIndicator==='FM')&&x.timeFrom<=s&&s<x.timeTo).pop();if(!base)return null;
+ const o={...base};f.filter(x=>x.changeIndicator==='BECMG'&&x.timeFrom>=base.timeFrom&&x.timeFrom<=s).forEach(b=>FIELDS.forEach(k=>{if(b[k]!=null&&!(k==='clouds'&&!b[k].length))o[k]=b[k]}));
+ o.temps=f.filter(x=>(x.changeIndicator==='TEMPO'||x.changeIndicator==='PROB')&&x.timeFrom<=s&&s<x.timeTo);return o}
+function modelAt(m,T){if(!m)return null;let bi=-1,bd=1e18;m.time.forEach((t,i)=>{const d=Math.abs(Date.parse(t+'Z')-T);if(d<bd){bd=d;bi=i}});return bd<=90*6e4?{t:m.temperature_2m[bi],d:m.dew_point_2m[bi],h:m.relative_humidity_2m[bi],p:m.pressure_msl[bi]}:null}
+const NA={v:'N/A',na:1};
+function officialColumn(d,T){const now=Date.now();
+ if(T<=now){const m=(d.metars||[]).reduce((a,x)=>!a||Math.abs(x.obsTime*1e3-T)<Math.abs(a.obsTime*1e3-T)?x:a,null);
+  if(!m||Math.abs(m.obsTime*1e3-T)>90*6e4)return{fail:'No METAR near this time'};
+  const p=hpa(m.altim),ce=ceilFt(m.clouds);
+  return{src:'METAR '+hhmm(m.obsTime*1e3),rows:[
+   {v:m.temp!=null?m.temp+'° / '+m.dewp+'°':'—'},{v:windTxt(m),warn:m.wgst>=25},{v:ce!=null?ce+' ft':'No ceiling',warn:ce!=null&&ce<1500},
+   {v:visTxt(m),warn:parseFloat(m.visib)<3.1},{v:cloudTxt(m.clouds)},{v:m.temp!=null?rh(m.temp,m.dewp)+' %':'—'},
+   {v:wxTxt(m.wxString),warn:/TS/.test(m.wxString||'')},{v:p?p.toFixed(0)+' hPa · '+(p/33.8639).toFixed(2)+' inHg':'—'}]}}
+ if(!d.taf)return{fail:'No TAF issued'};
+ const o=tafAt(d.taf,T);if(!o)return{fail:'Outside TAF validity'};
+ const md=modelAt(d.model,T),ce=ceilFt(o.clouds),M=(x,f)=>x==null?NA:{v:f(x),model:1};
+ const note=(fields,fmt)=>{const t=o.temps.find(x=>fields.some(k=>x[k]!=null&&!(k==='clouds'&&!x[k].length)));return t?(t.changeIndicator==='PROB'||t.probability?'PROB'+(t.probability||'')+' ':'TEMPO ')+fmt(t):''};
+ return{src:'TAF',rows:[
+  md?{v:Math.round(md.t)+'° / '+Math.round(md.d)+'°',model:1}:NA,{v:windTxt(o),warn:o.wgst>=25,note:note(['wspd'],windTxt)},
+  {v:ce!=null?ce+' ft':'No ceiling',warn:ce!=null&&ce<1500,note:note(['clouds'],t=>{const c=ceilFt(t.clouds);return c!=null?c+' ft':cloudTxt(t.clouds)})},
+  {v:visTxt(o),warn:parseFloat(o.visib)<3.1,note:note(['visib'],visTxt)},{v:cloudTxt(o.clouds),note:note(['clouds'],t=>cloudTxt(t.clouds))},
+  md?{v:Math.round(md.h)+' %',model:1}:NA,{v:wxTxt(o.wxString),warn:/TS/.test(o.wxString||''),note:note(['wxString'],t=>wxTxt(t.wxString))},
+  md?{v:Math.round(md.p)+' hPa · '+(md.p/33.8639).toFixed(2)+' inHg',model:1}:NA]}}
+const wdTxt=(d,s,g)=>(d==null||s==null)?null:(String(Math.round(d)).padStart(3,'0')+'° / '+Math.round(s)+' kt'+(g>s+5?' G'+Math.round(g):''));
+function modelColumn(m,T){if(!m)return null;let bi=-1,bd=1e18;m.time.forEach((t,i)=>{const d=Math.abs(Date.parse(t+'Z')-T);if(d<bd){bd=d;bi=i}});if(bd>90*6e4)return null;
+ const g=k=>m[k]&&m[k][bi],M=(x,f)=>x==null?NA:{v:f(x),model:1},vis=g('visibility'),pr=g('precipitation'),wc=g('weather_code'),p=g('pressure_msl');
+ return{src:'Model (Open-Meteo)',rows:[g('temperature_2m')==null?NA:{v:Math.round(g('temperature_2m'))+'° / '+Math.round(g('dew_point_2m'))+'°',model:1},
+  {...M(wdTxt(g('wind_direction_10m'),g('wind_speed_10m'),g('wind_gusts_10m')),x=>x),warn:g('wind_gusts_10m')>=25},{v:'N/A (not in model)',na:1},
+  {...M(vis,x=>(x/1000).toFixed(1)+' km'),warn:vis<5000},M(g('cloud_cover'),x=>x+' % (low '+g('cloud_cover_low')+' %)'),M(g('relative_humidity_2m'),x=>Math.round(x)+' %'),
+  {...M(pr,x=>x>0?x.toFixed(1)+' mm/h'+(wc>=95?' · thunderstorm':''):'None forecast'),warn:wc>=95},M(p,x=>Math.round(x)+' hPa · '+(x/33.8639).toFixed(2)+' inHg (model MSL)')]}}
+function column(d,T){const o=officialColumn(d,T);if(o&&!o.fail)return o;const m=modelColumn(d.model,T);if(m)return m;return{src:(o&&o.fail)||'No data',rows:Array(8).fill(NA)}}
+// ---- rendering
+const LABELS=['Temp / Dew P.','Wind / Gust','Ceiling','Visibility','Cloud cover','Humidity','Rain','Air pressure'];
+function renderBlock(def){const[k,,role,basis]=def,icao=S.ic[k];if(!icao)return'';const d=S.data[icao]||{loading:1},w=S.win[k];
+ const head=`<div class="bh"><div><div class="role">${role}</div><div class="title"><b class="mono">${esc(icao)}</b><span class="muted">${esc(d.name||'')}</span>@@FLAG@@</div></div>
+ <div class="muted noprint" style="display:flex;gap:10px;align-items:center;font-size:13px">Window ±<div class="seg">${[1,2,3].map(n=>`<button data-k="${k}" data-n="${n}" class="${n===w?'on':''}">${n}h</button>`).join('')}</div></div></div>`;
+ if(d.loading)return`<section class="card">${head.replace('@@FLAG@@','')}<div class="msg">Loading…</div></section>`;
+ if(d.error)return`<section class="card">${head.replace('@@FLAG@@','')}<div class="msg">${esc(d.error)}</div></section>`;
+ const modelOnly=!d.metars.length&&!d.taf;if(modelOnly&&!d.model)return`<section class="card">${head.replace('@@FLAG@@','')}<div class="msg">No METAR, TAF or airport location found for ${esc(icao)}. Check the ICAO code.</div></section>`;
+ const T=basis==='ETD'?etd:eta,ts=[T-w*36e5,T,T+w*36e5],cols=ts.map(t=>column(d,t));
+ const names=[`${w} hour before`,basis,`${w} hour later`],flag=cols.some(c=>c.rows.some(r=>r.warn));
+ const m=d.metars[0],banner=modelOnly?`<div class="msg" style="background:#eff6ff;color:#1e3a8a;padding:14px 24px;font-size:14px;line-height:1.5"><b>No official METAR or TAF is published for ${esc(icao)}.</b> The values below are a computer-model forecast for the airport location (Open-Meteo), not an observation. Use for general awareness only, and not for flight decisions. Ceiling is not available from the model. Confirm with the local met office / ATC / AIS.</div>`:'';
+ return`<section class="card">${head.replace('@@FLAG@@',(modelOnly?'<span class="flag" style="background:#dbeafe;color:#1e3a8a">Model only</span>':'')+(flag?'<span class="flag">Check conditions</span>':''))}${banner}<div class="tw"><table><thead><tr><th></th>${ts.map((t,i)=>`<th class="${i==1?'e':''}">${names[i]}<div class="t mono">${hhmm(t)}</div><div class="note">${esc(cols[i].src)}</div></th>`).join('')}</tr></thead><tbody>
+ ${LABELS.map((l,r)=>`<tr><td class="l">${l}</td>${cols.map(c=>{const x=c.rows[r];return`<td><span class="${x.warn?'w':''} ${x.model?'m':''}">${x.model?'◌ ':''}${esc(x.v)}</span>${x.note?`<div class="note">${esc(x.note)}</div>`:''}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>
+ <div class="bf"><div><div class="lab">METAR${m?' · observed '+hhmm(m.obsTime*1e3):''}</div><pre>${m?esc(m.rawOb):'No METAR is published for '+esc(icao)+'. Reports from other airports are not shown because they may not represent this location.'}</pre></div>
+ <div><div class="lab">TAF${d.taf?' · issued '+hhmm(Date.parse(d.taf.issueTime)||d.taf.issueTime*1e3):''}</div><pre>${d.taf?esc(d.taf.rawTAF):'No TAF issued for '+esc(icao)}</pre></div>
+ <a class="noprint" href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">Check NOTAMs on the official FAA site ↗</a>
+ <div class="note noprint">NOTAMs are not shown in this app. Always check your official AIS/NOTAM source.</div></div></section>`}
+function renderAll(){$('#blocks').innerHTML=DEFS.map(renderBlock).join('')}
+$('#blocks').onclick=e=>{const b=e.target.closest('button[data-n]');if(!b)return;S.win[b.dataset.k]=+b.dataset.n;save();renderAll()};
+async function load(icao){const run=(S.runs[icao]=(S.runs[icao]||0)+1);S.data[icao]={loading:1};
+ try{const r=await fetch('/api/wx?ids='+icao),j=await r.json();if(S.runs[icao]!==run)return;S.data[icao]=r.ok?j:{error:j.error||'Request failed.'};if(r.ok)$('#upd').textContent='Updated '+hhmm(Date.now())}
+ catch(e){if(S.runs[icao]===run)S.data[icao]={error:'Could not reach the server.'}}renderAll()}
+$('#go').onclick=()=>{const err=$('#err');err.textContent='';S.ic={};
+ for(const d of DEFS){const v=$('#ic-'+d[0]).value.trim().toUpperCase();if(!v){if(d[5]){err.textContent=d[1]+' ICAO is required.';return}continue}
+  if(!/^[A-Z0-9]{4}$/.test(v)){err.textContent=d[1]+': enter a 4-character ICAO code.';return}S.ic[d[0]]=v}
+ etd=fromInput($('#etd').value);eta=fromInput($('#eta').value);
+ if(!(etd>0)||!(eta>0)){err.textContent='Set both ETD and ETA.';return}if(eta<=etd){err.textContent='ETA must be after ETD.';return}
+ save();S.data={};const u=[...new Set(Object.values(S.ic))];renderAll();u.forEach(load)};
+</script></body></html>
